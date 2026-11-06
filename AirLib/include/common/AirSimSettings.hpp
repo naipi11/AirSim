@@ -501,6 +501,8 @@ namespace airlib
             if (it == vehicles.end())
                 // pre-existing flying pawns in Unreal Engine don't have name 'SimpleFlight'
                 it = vehicles.find("SimpleFlight");
+            if (it == vehicles.end())
+                throw std::invalid_argument("Vehicle settings not found for '" + vehicle_name + "'. Load vehicle settings before creating an API.");
             return it->second.get();
         }
 

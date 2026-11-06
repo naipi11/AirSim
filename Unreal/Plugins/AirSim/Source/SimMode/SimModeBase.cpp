@@ -259,8 +259,15 @@ void ASimModeBase::setTimeOfDay(bool is_enabled, const std::string& start_dateti
             tod_sim_clock_start_ = ClockFactory::get()->nowNanos();
 
             tod_last_update_ = 0;
-            if (start_datetime != "")
-                tod_start_time_ = Utils::to_time_t(start_datetime, is_start_datetime_dst) * 1E9;
+            if (start_datetime != "") {
+                try {
+                    tod_start_time_ = Utils::to_time_t(start_datetime, is_start_datetime_dst) * 1E9;
+                }
+                catch (const std::exception& ex) {
+                    UAirBlueprintLib::LogMessageString("Invalid TimeOfDay StartDateTime; using current time. ", ex.what(), LogDebugLevel::Failure);
+                    tod_start_time_ = std::time(nullptr) * 1E9;
+                }
+            }
             else
                 tod_start_time_ = std::time(nullptr) * 1E9;
         }

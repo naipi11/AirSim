@@ -1,5 +1,7 @@
 # Welcome to AirSim
 
+> **AirsimX development:** This fork is preparing a community-maintained evolution of Microsoft AirSim. See the [AirsimX development baseline](docs/airsimx/index.md), [roadmap](docs/airsimx/roadmap.md), and [compatibility matrix](docs/airsimx/compatibility.md). UE5 and newer flight-controller support are planned, not yet validated. The upstream documentation and badges below describe the inherited AirSim baseline.
+
 AirSim is a simulator for drones, cars and more, built on [Unreal Engine](https://www.unrealengine.com/) (we now also have an experimental [Unity](https://unity3d.com/) release). It is open-source, cross platform, and supports software-in-the-loop simulation with popular flight controllers such as PX4 & ArduPilot and hardware-in-loop with PX4 for physically and visually realistic simulations. It is developed as an Unreal plugin that can simply be dropped into any Unreal environment. Similarly, we have an experimental release for a Unity plugin.
 
 AirSim was conceived and created by [Shital Shah](https://shital.com) with PX4 and hardware-in-loop code contributed by [Chris Lovett](https://lovettsoftware.com/).

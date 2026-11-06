@@ -27,9 +27,15 @@ namespace airlib
             Quaternionr q12 = q1 * q2;
             Quaternionr q21 = q2 * q1;
 
-            float pitch, roll, yaw;
-            VectorMath::toEulerianAngle(q12, pitch, roll, yaw);
-            VectorMath::toEulerianAngle(q21, pitch, roll, yaw);
+            const Vector3r forward = Vector3r::UnitX();
+            testAssert(((q12 * forward) - Vector3r(0, 0, -1)).norm() < 1E-5f,
+                       "Yaw-pitch composition rotated the forward vector incorrectly");
+            testAssert(((q21 * forward) - Vector3r(0, 1, 0)).norm() < 1E-5f,
+                       "Pitch-yaw composition rotated the forward vector incorrectly");
+            testAssert(std::abs(q12.norm() - 1.0f) < 1E-5f, "Composed quaternion is not normalized");
+            const Vector3r sample(1, 2, 3);
+            testAssert((q12.conjugate() * (q12 * sample) - sample).norm() < 1E-5f,
+                       "Quaternion inverse did not restore the original vector");
         }
         void worldBodyTransformTest()
         {

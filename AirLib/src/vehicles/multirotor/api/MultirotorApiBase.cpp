@@ -446,6 +446,9 @@ namespace airlib
             overshoot = setNextPathPosition(path3d, path_segs, cur_path_loc, lookahead + lookahead_error, next_path_loc);
         }
 
+        if (!waiter.isTimeout() && !getCancelToken().isCancelled() &&
+            (getPosition() - path3d.back()).norm() <= getDistanceAccuracy())
+            waiter.complete();
         return waiter.isComplete();
     }
 

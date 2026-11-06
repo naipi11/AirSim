@@ -18,6 +18,8 @@
 #include <ctime>
 #include <random>
 #include <iomanip>
+#include <locale>
+#include <stdexcept>
 #include <iostream>
 #include <limits>
 #include <queue>
@@ -486,17 +488,22 @@ public:
 
     static std::time_t to_time_t(const std::string& str, bool is_dst = false, const std::string& format = "%Y-%m-%d %H:%M:%S")
     {
-        std::tm t;
+        std::tm t{};
         t.tm_isdst = is_dst ? 1 : 0;
         std::istringstream ss(str);
+        ss.imbue(std::locale::classic());
         ss >> std::get_time(&t, format.c_str());
-        return mktime(&t);
+        if (ss.fail())
+            throw std::invalid_argument("Invalid date/time '" + str + "' for format '" + format + "'.");
+        ss >> std::ws;
+        if (!ss.eof())
+            throw std::invalid_argument("Unexpected trailing characters in date/time '" + str + "'.");
 
-        /* GCC doesn't implement put_time yet
-        stringstream ss;
-        ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d-%H-%M-%S");
-        return ss.str();
-        */
+        // Keep the local-time and explicit DST semantics used by TimeOfDay settings.
+        const std::time_t result = std::mktime(&t);
+        if (result == static_cast<std::time_t>(-1))
+            throw std::out_of_range("Date/time cannot be represented: '" + str + "'.");
+        return result;
     }
 
     static string to_string(time_t tt, const char* format = "%Y-%m-%d-%H-%M-%S")
